@@ -7,6 +7,7 @@ let browserify = require('browserify');
 let reactify = require('reactify');
 let source = require('vinyl-source-stream');
 let concat = require('gulp-concat');
+var eslint = require('gulp-eslint');
 
 
 let config = {
@@ -66,4 +67,21 @@ gulp.task('css', function() {
         .pipe(gulp.dest(`${config.paths.dist}/css`))
 });
 
-gulp.task('default', ['html', 'js', 'css', 'open', 'watch']);
+gulp.task('lint', function () {
+    // ESLint ignores files with "node_modules" paths.
+    // So, it's best to have gulp ignore the directory as well.
+    // Also, Be sure to return the stream from the task;
+    // Otherwise, the task may end before the stream has finished.
+    return gulp.src([config.paths.js])
+        // eslint() attaches the lint output to the "eslint" property
+        // of the file object so it can be used by other modules.
+        .pipe(eslint())
+        // eslint.format() outputs the lint results to the console.
+        // Alternatively use eslint.formatEach() (see Docs).
+        .pipe(eslint.format())
+        // To have the process exit with an error code (1) on
+        // lint error, return the stream and pipe to failAfterError last.
+        .pipe(eslint.failOnError())
+});
+
+gulp.task('default', ['lint', 'html', 'js', 'css', 'open', 'watch']);

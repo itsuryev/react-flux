@@ -1,0 +1,12 @@
+{
+  "ecmaFeatures": {
+    "blockBindings": true,
+    "forOf": true,
+    "jsx": true,
+    "modules": true
+  },
+  "rules": {
+    "semi": 2,
+    "no-console": 2
+  }
+}
